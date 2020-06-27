@@ -1,5 +1,8 @@
 package com.example.getcomplimented;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -29,6 +32,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 
@@ -55,6 +59,16 @@ public class MainActivity extends AppCompatActivity {
         timer.schedule(rc = new refillCompliments(), 0, 1000);
         rc.setMain(this);
         complimentList = rc.getComplimentList();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY,4);
+        calendar.set(Calendar.MINUTE,10);
+        Intent intent = new Intent(getApplicationContext(),NotificationReceiver.class);
+        intent.setAction("MY_NOTIFICATION_MESSAGE");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),42,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY,pendingIntent);
     }
 
     public void toggleCompliment(View view) {
