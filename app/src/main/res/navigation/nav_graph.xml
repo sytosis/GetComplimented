@@ -13,16 +13,18 @@
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            app:destination="@id/TimePick" />
+        <action
+            android:id="@+id/action_FirstFragment_to_TimePicker"
+            app:destination="@id/TimePick" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.getcomplimented.SecondFragment"
+        android:id="@+id/TimePick"
+        android:name="com.example.getcomplimented.TimePick"
         android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
+        tools:layout="@layout/time_picker">
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            android:id="@+id/timePicker_To_FirstFragment2"
             app:destination="@id/FirstFragment" />
     </fragment>
 </navigation>

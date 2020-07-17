@@ -14,26 +14,28 @@ public class refillCompliments extends TimerTask {
    boolean firstRun = false;
 
     public void run() {
-        while (complimentList.size() < 10) {
             Thread thread = new Thread(new Runnable(){
                 @Override
                 public void run() {
+                    if (complimentList.size() < 40) {
                     try {
                         JSONObject json = readJsonFromUrl("https://complimentr.com/api");
+                        System.out.println(complimentList.size());
                         System.out.println(json.get("compliment"));
                         final String compliment = json.get("compliment").toString();
                         complimentList.add(compliment);
                         if (!firstRun) {
                             ma.toggleCompliment();
+                            System.out.println("Toggling compliment");
                             firstRun = true;
                         }
-                    } catch (Exception e ) {
-                        e.printStackTrace();
+                    } catch (Exception ignored) {
+
                     }
                 }
-            });
+            }
+        });
             thread.start();
-        }
     }
 
     public void setMain(MainActivity main) {

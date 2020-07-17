@@ -27,4 +27,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textview_first"
         tools:ignore="OnClick" />
+
+    <ImageButton
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/date_select_button"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:background="@drawable/myimage"
+        android:contentDescription="Button"
+        android:tag="dateButton"
+        tools:layout_editor_absoluteX="-3dp"
+        tools:layout_editor_absoluteY="683dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

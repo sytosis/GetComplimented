@@ -1,5 +1,7 @@
 package com.example.getcomplimented;
 
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,11 +13,30 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-public class NotificationReceiver extends BroadcastReceiver {
+import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
+import java.util.Random;
+
+import static android.content.Context.ALARM_SERVICE;
+import static com.example.getcomplimented.MainActivity.readJsonFromUrl;
+
+public class NotificationReceiver extends BroadcastReceiver {
+    public Context getContext() {
+        return context;
+    }
+
+    Random r = new Random();
+    String compliment = "";
+    Context context = null;
+    NotificationManager notificationManager;
     @Override
     public void onReceive(Context context, Intent intent) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String description = "compliment notification";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
@@ -23,23 +44,61 @@ public class NotificationReceiver extends BroadcastReceiver {
             channel.setDescription(description);
             notificationManager.createNotificationChannel(channel);
         }
-        Intent repeating_intent = new Intent(context,ComplimentActivity.class);
-        repeating_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        boolean onDate = intent.getBooleanExtra("onDate",false);
+        this.context = context;
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,42,repeating_intent,PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "compliment")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("Have a compliment!")
-                .setContentText("You have very beautiful feet")
-                .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Running thread to get compliment!");
+                JSONObject json;
+                try {
+                    json = readJsonFromUrl("https://complimentr.com/api");
+                    compliment = json.get("compliment").toString();
+                } catch (Exception e) {
+                    compliment = "No internet connection for this compliment :(";
+                    e.printStackTrace();
+                }
+                System.out.println("compliment finalized here: " + compliment);
+                System.out.println(compliment);
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), "compliment")
+                        .setSmallIcon(R.drawable.ic_launcher_foreground)
+                        .setContentTitle("Have a compliment!")
+                        .setContentText(compliment)
+                        .setPriority(NotificationCompat.PRIORITY_MAX)
+                        .setAutoCancel(true);
+                notificationManager.notify(r.nextInt(10000),builder.build());
+                Log.i("Notify", "Alarm");
+            }
 
-        if (intent.getAction().equals("MY_NOTIFICATION_MESSAGE")) {
-            System.out.println("GOT TO BUILD");
-            notificationManager.notify(42,builder.build());
-            Log.i("Notify", "Alarm");
+        });
+        thread.start();
+
+        if (!onDate) {
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhh.mm");
+            Calendar calendar = Calendar.getInstance();
+            try {
+                Date date = sdf.parse(Objects.requireNonNull(intent.getStringExtra("nextDate")));
+                assert date != null;
+                calendar.setTime(date);
+                System.out.println(calendar.getTime().toString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return;
+            }
+            intent.putExtra("onDate",false);
+            calendar.add(Calendar.DATE,1);
+            Date date = calendar.getTime();
+            intent.putExtra("nextDate",sdf.format(date));
+            System.out.println(sdf.format(date));
+            calendar.add(Calendar.DATE,-1);
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(Objects.requireNonNull(context).getApplicationContext(),42,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
         }
+
+
     }
 
 

@@ -1,8 +1,6 @@
 package com.example.getcomplimented;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Intent;
+
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -10,7 +8,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
+import android.os.StrictMode;
 import android.view.View;
 
 import android.view.Menu;
@@ -25,14 +23,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 
@@ -44,8 +37,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         setSupportActionBar(toolbar);
-
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,47 +50,52 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Timer timer = new Timer();
-        timer.schedule(rc = new refillCompliments(), 0, 1000);
+        timer.schedule(rc = new refillCompliments(), 0, 100);
         rc.setMain(this);
         complimentList = rc.getComplimentList();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY,4);
-        calendar.set(Calendar.MINUTE,10);
-        Intent intent = new Intent(getApplicationContext(),NotificationReceiver.class);
-        intent.setAction("MY_NOTIFICATION_MESSAGE");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),42,intent,PendingIntent.FLAG_UPDATE_CURRENT);
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY,pendingIntent);
     }
+
 
     public void toggleCompliment(View view) {
-        final String compliment = complimentList.get(0);
-        complimentList.remove(0);
-        runOnUiThread(new Runnable() {
+        if (complimentList.size() > 0) {
+            final String compliment = complimentList.get(0);
+            complimentList.remove(0);
+            runOnUiThread(new Runnable() {
 
-            @Override
-            public void run() {
-                TextView textView = findViewById(R.id.textview_first);
-                textView.setText(compliment);
+                @Override
+                public void run() {
+                    TextView textView = findViewById(R.id.textview_first);
+                    textView.setText(compliment);
 
-            }
-        });
+                }
+            });
+        }
     }
 
+
     public void toggleCompliment() {
-        final String compliment = complimentList.get(0);
-        complimentList.remove(0);
-        runOnUiThread(new Runnable() {
+        if (complimentList.size() > 0) {
+            final String compliment = complimentList.get(0);
+            complimentList.remove(0);
+            runOnUiThread(new Runnable() {
 
-            @Override
-            public void run() {
-                TextView textView = findViewById(R.id.textview_first);
-                textView.setText(compliment);
+                @Override
+                public void run() {
+                    TextView textView = findViewById(R.id.textview_first);
+                    textView.setText(compliment);
 
-            }
-        });
+                }
+            });
+        }
+    }
+
+    //currently unused
+    public String popCompliment() {
+        if (complimentList.size() > 0) {
+            return complimentList.remove(0);
+        } else {
+            return "0";
+        }
     }
 
 
@@ -110,14 +109,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
-        InputStream is = new URL(url).openStream();
-        try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+        try (InputStream is = new URL(url).openStream()) {
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             String jsonText = readAll(rd);
-            JSONObject json = new JSONObject(jsonText);
-            return json;
-        } finally {
-            is.close();
+            return new JSONObject(jsonText);
         }
     }
 
