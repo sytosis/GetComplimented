@@ -20,7 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
-import java.util.Random;
 
 import static android.content.Context.ALARM_SERVICE;
 import static com.example.getcomplimented.MainActivity.readJsonFromUrl;
@@ -30,7 +29,6 @@ public class NotificationReceiver extends BroadcastReceiver {
         return context;
     }
 
-    Random r = new Random();
     String compliment = "";
     Context context = null;
     NotificationManager notificationManager;
@@ -45,6 +43,7 @@ public class NotificationReceiver extends BroadcastReceiver {
             notificationManager.createNotificationChannel(channel);
         }
         boolean onDate = intent.getBooleanExtra("onDate",false);
+        final int code = intent.getIntExtra("code",0);
         this.context = context;
 
         Thread thread = new Thread(new Runnable() {
@@ -67,7 +66,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                         .setContentText(compliment)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setAutoCancel(true);
-                notificationManager.notify(r.nextInt(10000),builder.build());
+                notificationManager.notify(code,builder.build());
                 Log.i("Notify", "Alarm");
             }
 
@@ -93,7 +92,7 @@ public class NotificationReceiver extends BroadcastReceiver {
             System.out.println(sdf.format(date));
             calendar.add(Calendar.DATE,-1);
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(Objects.requireNonNull(context).getApplicationContext(),42,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(Objects.requireNonNull(context).getApplicationContext(),code,intent,PendingIntent.FLAG_UPDATE_CURRENT);
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
         }

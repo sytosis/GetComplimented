@@ -1,5 +1,8 @@
 package com.example.getcomplimented;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -13,11 +16,15 @@ public class refillCompliments extends TimerTask {
    MainActivity ma;
    boolean firstRun = false;
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) ma.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
     public void run() {
             Thread thread = new Thread(new Runnable(){
                 @Override
                 public void run() {
-                    if (complimentList.size() < 40) {
+                    if (complimentList.size() < 40 && isNetworkConnected()) {
                     try {
                         JSONObject json = readJsonFromUrl("https://complimentr.com/api");
                         System.out.println(complimentList.size());

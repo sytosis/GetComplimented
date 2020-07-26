@@ -28,6 +28,14 @@ public class FirstFragment extends Fragment {
                         .navigate(R.id.action_FirstFragment_to_TimePicker);
             }
         });
+
+        view.findViewById(R.id.alarm_list_open_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(FirstFragment.this)
+                        .navigate(R.id.action_FirstFragment_to_AlarmListFragment);
+            }
+        });
     }
 
 

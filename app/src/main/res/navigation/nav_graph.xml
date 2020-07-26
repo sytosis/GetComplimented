@@ -12,8 +12,8 @@
         tools:layout="@layout/fragment_first">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/TimePick" />
+            android:id="@+id/action_FirstFragment_to_AlarmListFragment"
+            app:destination="@id/AlarmListFragment" />
         <action
             android:id="@+id/action_FirstFragment_to_TimePicker"
             app:destination="@id/TimePick" />
@@ -25,6 +25,15 @@
         tools:layout="@layout/time_picker">
         <action
             android:id="@+id/timePicker_To_FirstFragment2"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/AlarmListFragment"
+        android:name="com.example.getcomplimented.AlarmListFragment"
+        android:label="alarm_list_fragment"
+        tools:layout="@layout/alarm_list_fragment" >
+        <action
+            android:id="@+id/action_AlarmListFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
 </navigation>

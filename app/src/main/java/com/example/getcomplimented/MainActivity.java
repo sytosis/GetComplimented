@@ -1,6 +1,7 @@
 package com.example.getcomplimented;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,11 +27,15 @@ import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
     List<String> complimentList = new ArrayList<>();
+    List<List<Object>> notifications = new ArrayList<>();
     refillCompliments rc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +58,18 @@ public class MainActivity extends AppCompatActivity {
         timer.schedule(rc = new refillCompliments(), 0, 100);
         rc.setMain(this);
         complimentList = rc.getComplimentList();
+
+        //set up getting alarms from database
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        Set<String> set = sharedPreferences.getStringSet("key", null);
+        if (set != null && getNotifications().isEmpty()) {
+            for (String alarm : set) {
+                List<Object> tempAlarm = new ArrayList<>();
+                Collections.addAll(tempAlarm, alarm.split(","));
+                addNotification(tempAlarm);
+            }
+        }
+
     }
 
 
@@ -66,12 +83,18 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     TextView textView = findViewById(R.id.textview_first);
                     textView.setText(compliment);
-
                 }
             });
         }
     }
 
+    public void addNotification(List<Object> notifDetails) {
+        notifications.add(notifDetails);
+    }
+
+    public List<List<Object>> getNotifications() {
+        return notifications;
+    }
 
     public void toggleCompliment() {
         if (complimentList.size() > 0) {
@@ -82,7 +105,9 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     TextView textView = findViewById(R.id.textview_first);
-                    textView.setText(compliment);
+                    if (textView != null) {
+                        textView.setText(compliment);
+                    }
 
                 }
             });

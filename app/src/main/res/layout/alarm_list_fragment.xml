@@ -4,8 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SecondFragment">
+    tools:context=".AlarmListFragment">
 
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_marginTop="46dp"
+        android:layout_height="fill_parent"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="parent">
+
+        <TableLayout
+            android:id="@+id/alarmTableLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:isScrollContainer="true"
+            android:padding="10dip">
+        </TableLayout>
+    </ScrollView>
+
+    <ImageButton
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/alarm_list_close_button"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:background="@drawable/myimage"
+        android:contentDescription="Button"
+        android:tag="Alarm List close"
+        />
+    <!--
     <TextView
         android:id="@+id/textview_second"
         android:layout_width="wrap_content"
@@ -14,6 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <Button
         android:id="@+id/button_second"
@@ -24,4 +55,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textview_second" />
+    -->
 </androidx.constraintlayout.widget.ConstraintLayout>
