@@ -9,6 +9,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.navigation.fragment.NavHostFragment;
+
 import android.os.StrictMode;
 import android.view.View;
 
@@ -28,8 +30,10 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Timer;
 
@@ -59,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         complimentList = rc.getComplimentList();
 
 
+
     }
 
 
@@ -76,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void toggleCompliment() {
+
         if (complimentList.size() > 0) {
             final String compliment = complimentList.get(0);
             complimentList.remove(0);

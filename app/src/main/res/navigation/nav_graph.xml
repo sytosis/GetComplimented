@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_FirstFragment_to_TimePicker"
             app:destination="@id/TimePick" />
+        <action
+            android:id="@+id/action_FirstFragment_to_EnterBuddyName"
+            app:destination="@id/EnterBuddyName" />
     </fragment>
     <fragment
         android:id="@+id/TimePick"
@@ -36,4 +39,14 @@
             android:id="@+id/action_AlarmListFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/EnterBuddyName"
+        android:name="com.example.getcomplimented.EnterBuddyName"
+        android:label="enter_buddy_name"
+        tools:layout="@layout/enter_buddy_name" >
+        <action
+            android:id="@+id/action_EnterBuddyName_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+
 </navigation>

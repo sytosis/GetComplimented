@@ -71,10 +71,10 @@ public class NotificationReceiver extends BroadcastReceiver {
                 }
                 System.out.println("compliment finalized here: " + compliment);
                 System.out.println(compliment);
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences("alarm", MODE_PRIVATE);
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), "compliment")
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
-                        .setContentTitle("Have a compliment!")
-                        .setContentText("Your compliment buddy has something to say")
+                        .setContentTitle(sharedPreferences.getString("name","Unknown") + " has a compliment for you")
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(compliment))
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setAutoCancel(true)

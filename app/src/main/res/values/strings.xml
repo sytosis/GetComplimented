@@ -9,4 +9,7 @@
 
     <string name="hello_first_fragment"></string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="enter_your_buddy_s_name">Enter your buddy\'s name</string>
+    <string name="username">Username</string>
+    <string name="buddy_name">Buddy Name</string>
 </resources>

@@ -94,7 +94,6 @@ public class AlarmListFragment extends Fragment {
                             System.out.println(alarmList.size());
                             //store into database
                             SharedPreferences.Editor alarmEditor = getActivity().getSharedPreferences("alarm", MODE_PRIVATE).edit();
-                            alarmEditor.clear();
                             Set<String> set = new HashSet<>();
                             for (int j = 0; j < alarmList.size(); j++) {
                                 System.out.println(alarmList.get(j));

@@ -47,8 +47,8 @@ public class TimePick extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        timePicker = (TimePicker) view.findViewById(R.id.time_picker_clock);
-        datePicker = (DatePicker) view.findViewById(R.id.date_picker);
+        timePicker = view.findViewById(R.id.time_picker_clock);
+        datePicker = view.findViewById(R.id.date_picker);
 
         //close button
         view.findViewById(R.id.date_close_button).setOnClickListener(new View.OnClickListener() {
@@ -108,8 +108,6 @@ public class TimePick extends Fragment {
                 if (set != null) {
                     set.add(store);
                 }
-
-                alarmEditor.clear();
                 alarmEditor.putStringSet("key",set);
                 alarmEditor.apply();
 
