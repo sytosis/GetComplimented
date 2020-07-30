@@ -1,4 +1,4 @@
-package com.example.getcomplimented;
+package com.HotBoyApps.ComplimentBuddy;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
@@ -16,6 +16,7 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+
 import org.json.JSONObject;
 
 import java.text.ParseException;
@@ -32,7 +33,6 @@ import java.util.Set;
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.POWER_SERVICE;
-import static com.example.getcomplimented.MainActivity.readJsonFromUrl;
 
 public class NotificationReceiver extends BroadcastReceiver {
     public Context getContext() {
@@ -43,7 +43,7 @@ public class NotificationReceiver extends BroadcastReceiver {
     Context context = null;
     NotificationManager notificationManager;
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -63,7 +63,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                 System.out.println("Running thread to get compliment!");
                 JSONObject json;
                 try {
-                    json = readJsonFromUrl("https://complimentr.com/api");
+                    json = MainActivity.readJsonFromUrl("https://complimentr.com/api");
                     compliment = json.get("compliment").toString();
                 } catch (Exception e) {
                     compliment = "No internet connection for this compliment :(";
@@ -78,9 +78,15 @@ public class NotificationReceiver extends BroadcastReceiver {
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(compliment))
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setAutoCancel(true)
-                        .setDefaults(Notification.DEFAULT_ALL);
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setContentIntent(
+                                PendingIntent.getActivity(
+                                        context,
+                                        0,
+                                        new Intent(context.getApplicationContext(),MainActivity.class),
+                                        PendingIntent.FLAG_UPDATE_CURRENT));
+
                 notificationManager.notify(code,builder.build());
-                Log.i("Notify", "Alarm");
                 PowerManager power = (PowerManager) getContext().getSystemService(POWER_SERVICE);
                 PowerManager.WakeLock wl = power.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "myapp:notificationWake");
                 wl.acquire(3000);
@@ -129,7 +135,6 @@ public class NotificationReceiver extends BroadcastReceiver {
                     System.out.println(alarmList.size());
                     //store into database
                     SharedPreferences.Editor alarmEditor = getContext().getSharedPreferences("alarm", MODE_PRIVATE).edit();
-                    alarmEditor.clear();
                     Set<String> finalSet = new HashSet<>();
                     for (int j = 0; j < alarmList.size(); j++) {
                         System.out.println(alarmList.get(j));

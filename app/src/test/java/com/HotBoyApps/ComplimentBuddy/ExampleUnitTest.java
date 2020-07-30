@@ -1,4 +1,4 @@
-package com.example.getcomplimented;
+package com.HotBoyApps.ComplimentBuddy;
 
 import org.junit.Test;
 

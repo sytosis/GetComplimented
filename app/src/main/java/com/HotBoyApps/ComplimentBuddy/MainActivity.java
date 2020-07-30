@@ -1,15 +1,15 @@
-package com.example.getcomplimented;
+package com.HotBoyApps.ComplimentBuddy;
 
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.StrictMode;
 import android.view.View;
@@ -29,12 +29,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
@@ -77,6 +72,16 @@ public class MainActivity extends AppCompatActivity {
                     textView.setText(compliment);
                 }
             });
+            SharedPreferences sharedPreferences = getSharedPreferences("alarm", MODE_PRIVATE);
+            final boolean working = sharedPreferences.getBoolean("working", false);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    TextView textView = findViewById(R.id.textview_first);
+                    textView.setText(String.valueOf(working));
+                }
+            });
+
         }
     }
 

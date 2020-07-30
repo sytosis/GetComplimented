@@ -1,6 +1,5 @@
-package com.example.getcomplimented;
+package com.HotBoyApps.ComplimentBuddy;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -17,11 +16,9 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
@@ -102,13 +99,11 @@ public class TimePick extends Fragment {
                 //store into database, set up getting alarms from database
                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences("alarm", MODE_PRIVATE);
                 Set<String> set = sharedPreferences.getStringSet("key", new HashSet<String>());
-
+                Set<String> set2 = new HashSet<>(set);
                 SharedPreferences.Editor alarmEditor = sharedPreferences.edit();
                 String store = stringOnDate + "," + stringDate + "," + stringCode;
-                if (set != null) {
-                    set.add(store);
-                }
-                alarmEditor.putStringSet("key",set);
+                set2.add(store);
+                alarmEditor.putStringSet("key",set2);
                 alarmEditor.apply();
 
                 System.out.println(sharedPreferences.getStringSet("key", new HashSet<String>()));

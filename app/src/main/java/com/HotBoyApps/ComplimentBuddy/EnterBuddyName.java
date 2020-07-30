@@ -1,8 +1,5 @@
-package com.example.getcomplimented;
+package com.HotBoyApps.ComplimentBuddy;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,13 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-
 import java.util.Objects;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -42,7 +36,6 @@ public class EnterBuddyName extends Fragment {
                 //check if a name is set (first launch)
                 SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("alarm", MODE_PRIVATE);
                 SharedPreferences.Editor buddyNameEditor = sharedPreferences.edit();
-                buddyNameEditor.clear();
                 buddyNameEditor.putString("name", buddyName.getText().toString());
                 buddyNameEditor.apply();
 

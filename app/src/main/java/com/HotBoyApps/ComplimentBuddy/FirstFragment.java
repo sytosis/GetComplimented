@@ -1,4 +1,4 @@
-package com.example.getcomplimented;
+package com.HotBoyApps.ComplimentBuddy;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+
 
 import static android.content.Context.MODE_PRIVATE;
 

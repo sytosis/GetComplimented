@@ -1,4 +1,4 @@
-package com.example.getcomplimented;
+package com.HotBoyApps.ComplimentBuddy;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
 
-import static com.example.getcomplimented.MainActivity.readJsonFromUrl;
+import static com.HotBoyApps.ComplimentBuddy.MainActivity.readJsonFromUrl;
 
 public class refillCompliments extends TimerTask {
    public List<String> complimentList = new ArrayList();

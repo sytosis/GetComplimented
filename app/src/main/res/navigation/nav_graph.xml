@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.example.getcomplimented.FirstFragment"
+        android:name="com.HotBoyApps.ComplimentBuddy.FirstFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_first">
 
@@ -23,7 +23,7 @@
     </fragment>
     <fragment
         android:id="@+id/TimePick"
-        android:name="com.example.getcomplimented.TimePick"
+        android:name="com.HotBoyApps.ComplimentBuddy.TimePick"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/time_picker">
         <action
@@ -32,7 +32,7 @@
     </fragment>
     <fragment
         android:id="@+id/AlarmListFragment"
-        android:name="com.example.getcomplimented.AlarmListFragment"
+        android:name="com.HotBoyApps.ComplimentBuddy.AlarmListFragment"
         android:label="alarm_list_fragment"
         tools:layout="@layout/alarm_list_fragment" >
         <action
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/EnterBuddyName"
-        android:name="com.example.getcomplimented.EnterBuddyName"
+        android:name="com.HotBoyApps.ComplimentBuddy.EnterBuddyName"
         android:label="enter_buddy_name"
         tools:layout="@layout/enter_buddy_name" >
         <action
