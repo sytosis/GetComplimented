@@ -27,8 +27,6 @@ public class refillCompliments extends TimerTask {
                     if (complimentList.size() < 40 && isNetworkConnected()) {
                     try {
                         JSONObject json = readJsonFromUrl("https://complimentr.com/api");
-                        System.out.println(complimentList.size());
-                        System.out.println(json.get("compliment"));
                         final String compliment = json.get("compliment").toString();
                         complimentList.add(compliment);
                         if (!firstRun) {

@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -46,7 +47,16 @@ public class AlarmListFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final List<List<Object>> alarmList = new ArrayList<>(((MainActivity) Objects.requireNonNull(getActivity())).getNotifications());
+        final List<List<String>> alarmList = new ArrayList<>();
+
+        SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("alarm", MODE_PRIVATE);
+        Set<String> set = sharedPreferences.getStringSet("key", new HashSet<String>());
+        for (String alarm : set) {
+            String alarmItems[] = alarm.split(",");
+            List<String> convertedItems = new ArrayList<>();
+            convertedItems.addAll(Arrays.asList(alarmItems));
+            alarmList.add(convertedItems);
+        }
         alarmTableLayout = Objects.requireNonNull(getView()).findViewById(R.id.alarmTableLayout);
         // Inflate the layout for this fragment
         for (int i = 0; i < alarmList.size(); i++) {
@@ -54,10 +64,10 @@ public class AlarmListFragment extends Fragment {
             alarmRow.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
 
             final TextView alarmInfo = new TextView(getContext());
-            if (alarmList.get(i).get(0).toString().equals("false")) {
+            if (alarmList.get(i).get(0).equals("false")) {
                 alarmInfo.setText("Repeating: " + alarmList.get(i).get(1).toString());
             } else {
-                alarmInfo.setText("Single :" + alarmList.get(i).get(1).toString());
+                alarmInfo.setText("Single: " + alarmList.get(i).get(1).toString());
             }
             alarmInfo.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT,Gravity.CENTER_HORIZONTAL));
 
@@ -65,7 +75,7 @@ public class AlarmListFragment extends Fragment {
             alarmDeleteButton.setText("delete");
             alarmDeleteButton.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL));
             final int z = i;
-            final int requestCode = Integer.parseInt(alarmList.get(z).get(2).toString());
+            final int requestCode = Integer.parseInt(alarmList.get(z).get(2));
             alarmDeleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -76,20 +86,19 @@ public class AlarmListFragment extends Fragment {
                             getContext(), requestCode, intent,
                             PendingIntent.FLAG_UPDATE_CURRENT);
                     alarmManager.cancel(pendingIntent);
-                    List<List<Object>> realAlarmList = ((MainActivity) Objects.requireNonNull(getActivity())).getNotifications();
                     //remove the entry with the deleted pending intent
-                    for (int i = 0; i < realAlarmList.size(); i++) {
-                        if (Integer.parseInt(realAlarmList.get(i).get(2).toString()) == requestCode) {
-                            realAlarmList.remove(i);
-                            System.out.println(alarmList.get(z).get(1).toString() + " Alarm removed");
-                            System.out.println(realAlarmList);
-
+                    for (int i = 0; i < alarmList.size(); i++) {
+                        if (Integer.parseInt(alarmList.get(i).get(2)) == requestCode) {
+                            System.out.println(alarmList.remove(i).get(1)+ " Alarm removed");
+                            System.out.println(alarmList);
+                            System.out.println(alarmList.size());
                             //store into database
-                            SharedPreferences.Editor alarmEditor = getActivity().getPreferences(MODE_PRIVATE).edit();
+                            SharedPreferences.Editor alarmEditor = getActivity().getSharedPreferences("alarm", MODE_PRIVATE).edit();
                             alarmEditor.clear();
                             Set<String> set = new HashSet<>();
-                            for (int j = 0; j < realAlarmList.size(); j++) {
-                                String store = realAlarmList.get(j).get(0) + "," + realAlarmList.get(i).get(1) + "," + realAlarmList.get(i).get(2);
+                            for (int j = 0; j < alarmList.size(); j++) {
+                                System.out.println(alarmList.get(j));
+                                String store = alarmList.get(j).get(0) + "," + alarmList.get(j).get(1) + "," + alarmList.get(j).get(2);
                                 set.add(store);
                             }
                             alarmEditor.putStringSet("key", set);
@@ -109,6 +118,7 @@ public class AlarmListFragment extends Fragment {
 
         }
 
+        //close button
         view.findViewById(R.id.alarm_list_close_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,6 +126,7 @@ public class AlarmListFragment extends Fragment {
                         .navigate(R.id.action_AlarmListFragment_to_FirstFragment);
             }
         });
+
 
 
     }

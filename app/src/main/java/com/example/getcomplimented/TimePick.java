@@ -76,12 +76,12 @@ public class TimePick extends Fragment {
                 intent.putExtra("onDate",onDate);
 
                 calendar.add(Calendar.DATE,1);
-                final Date date = calendar.getTime();
+                final Date nextDate = calendar.getTime();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhh.mm",Locale.getDefault());
-                intent.putExtra("nextDate",sdf.format(date));
-                System.out.println(sdf.format(date));
+                intent.putExtra("nextDate",sdf.format(nextDate));
+                System.out.println(sdf.format(nextDate));
                 calendar.add(Calendar.DATE,-1);
-
+                final Date date = calendar.getTime();
                 //the code is used for notification and pending intent
                 final int code = r.nextInt();
                 intent.putExtra("code",code);
@@ -90,31 +90,30 @@ public class TimePick extends Fragment {
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
 
                 //store into the Set on mainactivity for future references
-                ((MainActivity) getActivity()).addNotification( new ArrayList<Object>() {{
+                String stringOnDate = String.valueOf(onDate);
+                String stringDate = "";
+                if (onDate) {
+                    stringDate = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(date);
+                } else {
+                    stringDate = new SimpleDateFormat("HH:mm",Locale.getDefault()).format(date);
+                }
 
-                    add(onDate);
+                String stringCode = String.valueOf(code);
+                //store into database, set up getting alarms from database
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("alarm", MODE_PRIVATE);
+                Set<String> set = sharedPreferences.getStringSet("key", new HashSet<String>());
 
-                    if (onDate) {
-                        add(new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.getDefault()).format(date));
-                    } else {
-                        add(new SimpleDateFormat("hh:mm",Locale.getDefault()).format(date));
-                    }
-
-                    add(code);
-                }});
-                System.out.println(((MainActivity) getActivity()).getNotifications());
-                //store into database
-                SharedPreferences.Editor alarmEditor = getActivity().getPreferences(MODE_PRIVATE).edit();
-                alarmEditor.clear();
-                Set<String> set = new HashSet<>();
-                List<List<Object>> notificationList = ((MainActivity) getActivity()).getNotifications();
-                for (int i = 0; i < notificationList.size(); i++) {
-                    String store = notificationList.get(i).get(0) + "," + notificationList.get(i).get(1) + "," + notificationList.get(i).get(2);
+                SharedPreferences.Editor alarmEditor = sharedPreferences.edit();
+                String store = stringOnDate + "," + stringDate + "," + stringCode;
+                if (set != null) {
                     set.add(store);
                 }
-                alarmEditor.putStringSet("key", set);
+
+                alarmEditor.clear();
+                alarmEditor.putStringSet("key",set);
                 alarmEditor.apply();
 
+                System.out.println(sharedPreferences.getStringSet("key", new HashSet<String>()));
                 System.out.println(calendar.getTime().toString());
                 NavHostFragment.findNavController(TimePick.this)
                         .navigate(R.id.timePicker_To_FirstFragment2);

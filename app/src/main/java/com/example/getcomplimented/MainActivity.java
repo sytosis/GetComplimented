@@ -35,7 +35,6 @@ import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
     List<String> complimentList = new ArrayList<>();
-    List<List<Object>> notifications = new ArrayList<>();
     refillCompliments rc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,26 +58,14 @@ public class MainActivity extends AppCompatActivity {
         rc.setMain(this);
         complimentList = rc.getComplimentList();
 
-        //set up getting alarms from database
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-        Set<String> set = sharedPreferences.getStringSet("key", null);
-        if (set != null && getNotifications().isEmpty()) {
-            for (String alarm : set) {
-                List<Object> tempAlarm = new ArrayList<>();
-                Collections.addAll(tempAlarm, alarm.split(","));
-                addNotification(tempAlarm);
-            }
-        }
 
     }
 
 
     public void toggleCompliment(View view) {
         if (complimentList.size() > 0) {
-            final String compliment = complimentList.get(0);
-            complimentList.remove(0);
+            final String compliment = complimentList.remove(0);
             runOnUiThread(new Runnable() {
-
                 @Override
                 public void run() {
                     TextView textView = findViewById(R.id.textview_first);
@@ -86,14 +73,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    public void addNotification(List<Object> notifDetails) {
-        notifications.add(notifDetails);
-    }
-
-    public List<List<Object>> getNotifications() {
-        return notifications;
     }
 
     public void toggleCompliment() {
