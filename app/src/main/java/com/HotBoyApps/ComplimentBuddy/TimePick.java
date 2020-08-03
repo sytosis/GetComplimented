@@ -69,7 +69,7 @@ public class TimePick extends Fragment {
                     calendar.set(Calendar.MONTH,datePicker.getMonth());
                     calendar.set(Calendar.YEAR,datePicker.getYear());
                 }
-                Intent intent = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(),NotificationReceiver.class);
+                Intent intent = new Intent(requireActivity().getApplicationContext(),NotificationReceiver.class);
                 intent.putExtra("onDate",onDate);
 
                 calendar.add(Calendar.DATE,1);
@@ -82,7 +82,7 @@ public class TimePick extends Fragment {
                 //the code is used for notification and pending intent
                 final int code = r.nextInt();
                 intent.putExtra("code",code);
-                final PendingIntent pendingIntent = PendingIntent.getBroadcast(Objects.requireNonNull(getActivity()).getApplicationContext(),code,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                final PendingIntent pendingIntent = PendingIntent.getBroadcast(requireActivity().getApplicationContext(),code,intent,PendingIntent.FLAG_UPDATE_CURRENT);
                 AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
 

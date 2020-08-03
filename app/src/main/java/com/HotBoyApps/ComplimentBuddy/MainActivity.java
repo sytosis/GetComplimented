@@ -1,6 +1,7 @@
 package com.HotBoyApps.ComplimentBuddy;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -10,6 +11,9 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import android.os.StrictMode;
 import android.view.View;
@@ -51,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
+        //restart alarms if it hasnt already
+        startSavedAlarms();
         Timer timer = new Timer();
         timer.schedule(rc = new refillCompliments(), 0, 100);
         rc.setMain(this);
@@ -62,6 +67,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void startSavedAlarms() {
+        WorkRequest uploadWorkRequest =
+                new OneTimeWorkRequest.Builder(StartAlarmsWorker.class)
+                        .build();
+        WorkManager
+                .getInstance(this)
+                .enqueue(uploadWorkRequest);
+    }
     public void toggleCompliment(View view) {
         if (complimentList.size() > 0) {
             final String compliment = complimentList.remove(0);

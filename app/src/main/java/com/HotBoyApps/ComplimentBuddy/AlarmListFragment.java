@@ -50,7 +50,7 @@ public class AlarmListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final List<List<String>> alarmList = new ArrayList<>();
 
-        SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("alarm", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("alarm", MODE_PRIVATE);
         Set<String> set = sharedPreferences.getStringSet("key", new HashSet<String>());
         for (String alarm : set) {
             String alarmItems[] = alarm.split(",");
@@ -58,7 +58,7 @@ public class AlarmListFragment extends Fragment {
             convertedItems.addAll(Arrays.asList(alarmItems));
             alarmList.add(convertedItems);
         }
-        alarmTableLayout = Objects.requireNonNull(getView()).findViewById(R.id.alarmTableLayout);
+        alarmTableLayout = requireView().findViewById(R.id.alarmTableLayout);
         // Inflate the layout for this fragment
         for (int i = 0; i < alarmList.size(); i++) {
             final TableRow alarmRow = new TableRow(getContext());
@@ -81,7 +81,7 @@ public class AlarmListFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     alarmTableLayout.removeView((TableRow) view.getParent());
-                    AlarmManager alarmManager = (AlarmManager) Objects.requireNonNull(getActivity()).getSystemService(Context.ALARM_SERVICE);
+                    AlarmManager alarmManager = (AlarmManager) requireActivity().getSystemService(Context.ALARM_SERVICE);
                     Intent intent = new Intent(getActivity().getApplicationContext(),NotificationReceiver.class);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(
                             getContext(), requestCode, intent,

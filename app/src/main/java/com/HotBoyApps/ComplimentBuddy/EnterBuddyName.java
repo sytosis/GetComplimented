@@ -34,7 +34,7 @@ public class EnterBuddyName extends Fragment {
             @Override
             public void onClick(View view) {
                 //check if a name is set (first launch)
-                SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("alarm", MODE_PRIVATE);
+                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("alarm", MODE_PRIVATE);
                 SharedPreferences.Editor buddyNameEditor = sharedPreferences.edit();
                 buddyNameEditor.putString("name", buddyName.getText().toString());
                 buddyNameEditor.apply();
